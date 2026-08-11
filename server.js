@@ -5,7 +5,7 @@ const path = require('path');
 const CLIENTES_DIR = path.join(__dirname, 'clientes');
 if (!fs.existsSync(CLIENTES_DIR)) fs.mkdirSync(CLIENTES_DIR);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const BASE_DIR = __dirname;
 
 const MIME = {
@@ -52,6 +52,16 @@ function decodeForm(body) {
 }
 
 const server = http.createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+    }
+
     const reqUrl = decodeURIComponent(req.url);
 
     // Rota principal — serve o HTML do formulário

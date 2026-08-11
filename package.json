@@ -1,0 +1,16 @@
+{
+  "name": "plano-central",
+  "version": "1.0.0",
+  "description": "Sistema de registro de campanha",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  }
+}
